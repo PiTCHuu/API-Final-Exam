@@ -1,0 +1,117 @@
+openapi: "3.0.3"
+info:
+  title: STD24115
+  version: "1.0.0"
+  description: "This is a specification of STD24115"
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Retourne "Ok" en texte brut
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Ok
+
+  /phones:
+    post:
+      summary: Ajouter une liste de téléphones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Phone"
+      responses:
+        "201":
+          description: Téléphones ajoutés avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "phones ajoutés"
+
+    get:
+      summary: Récupérer la liste des téléphones
+      responses:
+        "200":
+          description: Liste des téléphones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Phone"
+
+  /phones/{id}:
+    get:
+      summary: Récupérer un téléphone par identifiant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Téléphone trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Phone"
+        "404":
+          description: Téléphone non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Phone avec l'identifiant 'X' introuvable."
+
+components:
+  schemas:
+    Characteristic:
+      type: object
+      properties:
+        ram_memory:
+          type: integer
+          example: 8
+        rom_memory:
+          type: integer
+          example: 128
+      required:
+        - ram_memory
+        - rom_memory
+
+    Phone:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: "phone001"
+        brand:
+          type: string
+          example: "Samsung"
+        model:
+          type: string
+          example: "Galaxy S21"
+        characteristics:
+          $ref: "#/components/schemas/Characteristic"
+      required:
+        - identifier
+        - brand
+        - model
+        - characteristics
