@@ -43,7 +43,3 @@ def get_phone(id: str):
     raise HTTPException(
         status_code=404,detail=f"Phone avec l'identifiant '{id}' n'existe pas."
     )
-
-
-@app.put("/phones/{id}/characteristics", response_model=Phone)
-def update_characteristics(id: str, new_characteristics:
